@@ -233,23 +233,19 @@ export default class Model
    *  Globals Errors:
    *    BAD_ID: cartId does not reference a cart.
    */
-  async getCart(rawNameValues)
-  {
-    //@TODO
-    let rslt;
-    const nameValues = this._validate('getCart', rawNameValues);
-    let crtID = Number(nameValues.cartId);
-    const get_cartby_id = await this.cart_catalog.findOne({'_id' : crtID}, {fields: {'_id': 0}})
-    if (!isNullorUndefined(get_cartby_id))
-    {
-      return rslt;
-    }
-    else
-    {
-      const msg = "Enter correct ID";
-      throw [ new ModelError('BAD ID', msg)];
-    }
-  }
+   async getCart(rawNameValues)
+   {
+     //@TODO
+     let rslt;
+     const nameValues = this._validate('getCart', rawNameValues);
+     let crtID = Number(nameValues.cartId);
+     await this.cart_catalog.findOne({'_id' : crtID}, {fields: {'_id': 0}})
+     .then(result =>
+       {
+         rslt=result;
+       });
+       return rslt;
+   }
 
   /** Given fields { isbn, title, authors, publisher, year, pages } =
    *  nameValues for a book, add the book to this model.  The isbn
