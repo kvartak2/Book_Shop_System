@@ -84,21 +84,32 @@ export default class Model
 
       client = await mongo.connect(dbUrl,MONGO_CONNECT_OPTIONS);
       const db = await client.db(dbName);
-      const cart_catalog = await db.collection('books');
-      const book_catalog = await db.collection('books');
-      await book_catalog.createIndex({isbn:1});
-      await book_catalog.createIndex({ authors: 'text',title: 'text'});
-
-      const props =
+      if(isNullorUndefined(db))
       {
-      	validator: new Validator(META),
-        client,db,cart_catalog,book_catalog,
-      	//@TODO other properties
 
-      };
+        throw [ new ModelError(`DB FAILURE', 'Unable to connect to DB`) ];
 
-      const model = new Model(props);
-      return model;
+
+
+      }
+      else
+      {
+        const cart_catalog = await db.collection('books');
+        const book_catalog = await db.collection('books');
+        await book_catalog.createIndex({isbn:1});
+        await book_catalog.createIndex({ authors: 'text',title: 'text'});
+
+        const props =
+        {
+        	validator: new Validator(META),
+          client,db,cart_catalog,book_catalog,
+        	//@TODO other properties
+
+        };
+        const model = new Model(props);
+        return model;
+      }
+
     }
     catch (err)
     {
@@ -168,6 +179,7 @@ export default class Model
     const nameValues_lastModified=new Date().toISOString();
 
 
+
     let errmsg = [];
 
     let chk_isbn = await this.findBooks({isbn:nameValues.sku});
@@ -206,6 +218,8 @@ export default class Model
       }
     }
     //@TODO
+
+
   }
 
   /** Given fields { cartId } = nameValues, return cart identified by
@@ -225,12 +239,16 @@ export default class Model
     let rslt;
     const nameValues = this._validate('getCart', rawNameValues);
     let crtID = Number(nameValues.cartId);
-    await this.cart_catalog.findOne({'_id' : crtID}, {fields: {'_id': 0}})
-    .then(result =>
-      {
-        rslt=result;
-      });
+    const get_cartby_id = await this.cart_catalog.findOne({'_id' : crtID}, {fields: {'_id': 0}})
+    if (!isNullorUndefined(get_cartby_id))
+    {
       return rslt;
+    }
+    else
+    {
+      const msg = "Enter correct ID";
+      throw [ new ModelError('BAD ID', msg)];
+    }
   }
 
   /** Given fields { isbn, title, authors, publisher, year, pages } =
@@ -252,7 +270,9 @@ export default class Model
 
     const nameValues_lastModified=new Date().toISOString();
     await this.book_catalog.updateOne({isbn : nameValues.isbn},{$set : {nUnits : nameValues.nUnits,title : nameValues.title,authors : nameValues.authors,pages : nameValues.pages,year : nameValues.year,publisher : nameValues.publisher,_lastModified : nameValues_lastModified}},{upsert: true})
-    .then(result =>{/*console.log("Updated");*/});
+    .then(result =>{
+      console.log("Updated");
+    }).catch(err => console.error(`Failed to add Book: ${err}`))
     return nameValues.isbn;
   }
 
@@ -325,3 +345,7 @@ const MONGO_CONNECT_OPTIONS = { useUnifiedTopology: true };
 const COUNT = 5;
 const INDEX = 0;
 //define private constants and functions here.
+function isNullorUndefined(val)
+{
+  return (val === undefined || val == null || val.length <= 0 || Object.keys(val).length === 0 );
+}
