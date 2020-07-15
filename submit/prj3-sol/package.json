@@ -1,0 +1,12 @@
+{
+  "name": "prj3-sol",
+  "version": "1.0.0",
+  "description": "Name:\t\tKasturi Shirish Vartak B-Number:\tB00815143 Email:\t\tkvartak2@binghamton.edu",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
