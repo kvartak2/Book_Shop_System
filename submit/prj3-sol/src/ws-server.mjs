@@ -447,7 +447,7 @@ function mapError(err)
     errors = isDomainError ? err.map(e => ({ code: e.code, message: e.message, name: e.name })) : [ { code: 'SERVER_ERROR', message: err.toString(), } ];
   }
   
-  //if (!isDomainError) console.error(err);
+  
   return {status,errors};
 } 
 
