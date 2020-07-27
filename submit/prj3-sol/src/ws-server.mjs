@@ -187,9 +187,7 @@ function doFindBooks(app)
     }
     catch(err)
     {
-     //res.json({err});
       const mapped = mapError(err);
-     //res.json({mapped});
       res.status(mapped.status).json(mapped);
     }
   });
