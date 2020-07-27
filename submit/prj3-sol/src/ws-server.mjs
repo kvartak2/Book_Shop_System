@@ -1,5 +1,5 @@
 import assert from 'assert';
-import cors from 'cors';
+//import cors from 'cors';
 import express from 'express';
 import bodyParser from 'body-parser';
 import querystring from 'querystring';
@@ -35,7 +35,7 @@ function setupRoutes(app)
 {
   const base = app.locals.base;
 
-  app.use(cors());
+  //app.use(cors());
 
   //pseudo-handlers used to set up defaults for req
   app.use(bodyParser.json());      //always parse request bodies as JSON
