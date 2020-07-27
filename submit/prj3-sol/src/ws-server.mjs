@@ -334,7 +334,7 @@ function doSearchBooks(app)
 
       	else if(checkIfUndefOrNull(q))
       	{
-      	//res.json(searchBooksObj_len);
+      	
       	  if(searchBooksObj1.length > DEFAULT_COUNT) {const nextLink = custom_fun(reqUrl,'next','next',q,"",responseobj);links.push(nextLink);}
       	}
 
