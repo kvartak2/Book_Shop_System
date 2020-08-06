@@ -10,8 +10,7 @@ export default class Books extends React.Component
   {
     super(props);
     this.state =  {search : '' };
-    //console.log(props.books);
-    //console.log("----"+this.state.search);
+
     
     //@TODO other initialization
   }
