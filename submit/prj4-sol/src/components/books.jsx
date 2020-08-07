@@ -21,7 +21,7 @@ export default class Books extends React.Component
   response(result)
   {
   	event.preventDefault();
-  	Book({result,true});
+  	//Book({result,true});
   }
   render() 
   {
